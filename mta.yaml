@@ -1,7 +1,8 @@
-_schema-version: '3.1'
+_schema-version: "3.1"
 ID: employee-management
 version: 1.0.0
-description: "SAP BTP CAPM Employee Management Application"
+description: SAP BTP CAP Employee Management Application
+
 parameters:
   enable-parallel-deployments: true
 
@@ -13,45 +14,63 @@ build-parameters:
         - npx cds build --production
 
 modules:
-  # --------------------- SERVER MODULE (CAP BACKEND & UI) ---------------------
+  ###########################################################################
+  # CAP SERVICE
+  ###########################################################################
   - name: employee-management-srv
     type: nodejs
     path: gen/srv
+
     parameters:
       buildpack: nodejs_buildpack
       memory: 512M
       disk-quota: 1024M
+
     build-parameters:
       builder: npm
-    requires:
-      - name: employee-management-db
-      - name: employee-management-auth
 
-  # --------------------- DB DEPLOYER MODULE (HANA DB) --------------------
+    provides:
+      - name: srv-api
+        properties:
+          srv-url: ${default-url}
+
+    requires:
+      - name: employee-management-auth
+      - name: employee-management-db
+
+  ###########################################################################
+  # DATABASE DEPLOYER
+  ###########################################################################
   - name: employee-management-db-deployer
     type: hdb
     path: gen/db
+
     parameters:
       buildpack: nodejs_buildpack
       memory: 256M
+
     requires:
       - name: employee-management-db
 
 resources:
-  # --------------------- SAP HANA DATABASE SERVICE ----------------------
+  ###########################################################################
+  # HDI CONTAINER
+  ###########################################################################
   - name: employee-management-db
     type: com.sap.xs.hdi-container
     parameters:
       service: hana
       service-plan: hdi-shared
 
-  # --------------------- XSUAA SECURITY SERVICE -------------------------
+  ###########################################################################
+  # XSUAA
+  ###########################################################################
   - name: employee-management-auth
     type: org.cloudfoundry.managed-service
     parameters:
       service: xsuaa
       service-plan: application
-      path: ./xs-security.json
+      path: xs-security.json
       config:
         xsappname: employee-management-${space}
         tenant-mode: dedicated
