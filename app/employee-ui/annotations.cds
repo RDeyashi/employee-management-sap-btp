@@ -15,24 +15,36 @@ annotate service.Employees with @(
   UI.LineItem : [
     { $Type : 'UI.DataField', Value : firstName, Label : 'First Name' },
     { $Type : 'UI.DataField', Value : lastName, Label : 'Last Name' },
-    { $Type : 'UI.DataField', Value : email, Label : 'Email' },
+    { $Type : 'UI.DataField', Value : email, Label : 'Email Address' },
     { $Type : 'UI.DataField', Value : jobTitle, Label : 'Job Title' },
     { $Type : 'UI.DataField', Value : department.name, Label : 'Department' },
-    { $Type : 'UI.DataField', Value : salary, Label : 'Salary' },
+    { $Type : 'UI.DataField', Value : salary, Label : 'Base Salary' },
     { $Type : 'UI.DataField', Value : currency, Label : 'Currency' },
     { $Type : 'UI.DataField', Value : status, Label : 'Status' }
   ],
+  UI.HeaderFacets : [
+    {
+      $Type  : 'UI.ReferenceFacet',
+      Target : '@UI.FieldGroup#HeaderStatus'
+    }
+  ],
+  UI.FieldGroup #HeaderStatus : {
+    Data : [
+      { $Type : 'UI.DataField', Value : status, Label : 'Employment Status' },
+      { $Type : 'UI.DataField', Value : hireDate, Label : 'Hire Date' }
+    ]
+  },
   UI.Facets : [
     {
       $Type  : 'UI.ReferenceFacet',
       ID     : 'EmployeeGeneralInfo',
-      Label  : 'Employee Information',
+      Label  : 'Personal Information',
       Target : '@UI.FieldGroup#GeneralInfo'
     },
     {
       $Type  : 'UI.ReferenceFacet',
       ID     : 'EmployeeEmploymentDetails',
-      Label  : 'Employment Details',
+      Label  : 'Employment & Compensation',
       Target : '@UI.FieldGroup#EmploymentDetails'
     }
   ],
@@ -51,7 +63,7 @@ annotate service.Employees with @(
       { $Type : 'UI.DataField', Value : hireDate, Label : 'Hire Date' },
       { $Type : 'UI.DataField', Value : salary, Label : 'Base Salary' },
       { $Type : 'UI.DataField', Value : currency, Label : 'Currency' },
-      { $Type : 'UI.DataField', Value : status, Label : 'Employment Status' }
+      { $Type : 'UI.DataField', Value : status, Label : 'Status' }
     ]
   }
 );
@@ -64,8 +76,8 @@ annotate service.Departments with @(
     Description    : { $Type : 'UI.DataField', Value : code }
   },
   UI.LineItem : [
-    { $Type : 'UI.DataField', Value : code, Label : 'Code' },
-    { $Type : 'UI.DataField', Value : name, Label : 'Name' },
+    { $Type : 'UI.DataField', Value : code, Label : 'Department Code' },
+    { $Type : 'UI.DataField', Value : name, Label : 'Department Name' },
     { $Type : 'UI.DataField', Value : headCount, Label : 'Headcount' },
     { $Type : 'UI.DataField', Value : description, Label : 'Description' }
   ]
