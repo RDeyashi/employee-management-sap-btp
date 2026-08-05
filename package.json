@@ -17,7 +17,7 @@
     "axios": "^1.19.0"
   },
   "scripts": {
-    "start": "cds run",
+    "start": "cds-serve",
     "watch": "cds watch",
     "build": "cds build",
     "test": "node --test"
