@@ -10,38 +10,23 @@ build-parameters:
     - builder: custom
       commands:
         - npm ci
-        - npx cds build --production
+        - npx cds build
 
 modules:
-  # --------------------- SERVER MODULE (CAP BACKEND) ---------------------
+  # --------------------- SERVER MODULE (CAP BACKEND & UI) ---------------------
   - name: employee-management-srv
     type: nodejs
     path: gen/srv
     parameters:
       buildpack: nodejs_buildpack
+      memory: 512M
+      disk-quota: 1024M
     build-parameters:
       builder: npm
     requires:
-      - name: employee-management-db
       - name: employee-management-auth
 
-  # --------------------- DB DEPLOYER MODULE (HANA DB) --------------------
-  - name: employee-management-db-deployer
-    type: hdb
-    path: gen/db
-    parameters:
-      buildpack: nodejs_buildpack
-    requires:
-      - name: employee-management-db
-
 resources:
-  # --------------------- SAP HANA DATABASE SERVICE ----------------------
-  - name: employee-management-db
-    type: com.sap.xs.hdi-container
-    parameters:
-      service: hana
-      service-plan: hdi-shared
-
   # --------------------- XSUAA SECURITY SERVICE -------------------------
   - name: employee-management-auth
     type: org.cloudfoundry.managed-service

@@ -3,56 +3,1511 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>Employee Management Studio - SAP Fiori</title>
-  
-  <script
-    id="sap-ui-bootstrap"
-    src="https://ui5.sap.com/resources/sap-ui-core.js"
-    data-sap-ui-theme="sap_horizon"
-    data-sap-ui-resourceroots='{
-      "employee.management.ui": "./"
-    }'
-    data-sap-ui-compatVersion="edge"
-    data-sap-ui-async="true"
-    data-sap-ui-preload="async"
-    data-sap-ui-frameOptions="trusted">
-  </script>
-
+  <title>HR Management Studio - SAP BTP CAPM</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <style>
-    html, body {
-      height: 100%;
+    :root {
+      --bg-gradient: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
+      --card-bg: rgba(30, 41, 59, 0.7);
+      --card-bg-solid: #1e293b;
+      --card-border: rgba(255, 255, 255, 0.1);
+      --primary: #6366f1;
+      --primary-hover: #4f46e5;
+      --primary-glow: rgba(99, 102, 241, 0.3);
+      --accent: #38bdf8;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --input-bg: #0f172a;
+      --border-color: #334155;
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 16px;
+      --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3), 0 8px 10px -6px rgba(0, 0, 0, 0.3);
+    }
+
+    * {
+      box-sizing: border-box;
       margin: 0;
       padding: 0;
-      overflow: hidden;
-      font-family: var(--sapFontFamily, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif);
-      background-color: var(--sapBackgroundColor, #f5f6f7);
     }
 
-    #content {
-      height: 100%;
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg-gradient);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Header & Navigation */
+    header {
+      background: rgba(15, 23, 42, 0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--card-border);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      padding: 0.85rem 2rem;
+    }
+
+    .nav-container {
+      max-width: 1400px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .brand-logo {
+      width: 40px;
+      height: 40px;
+      background: linear-gradient(135deg, #6366f1, #38bdf8);
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 1.2rem;
+      color: #fff;
+      box-shadow: 0 0 15px var(--primary-glow);
+    }
+
+    .brand-text h1 {
+      font-size: 1.25rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+
+    .brand-text p {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    /* Navigation Tabs */
+    .tab-navigation {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: rgba(255, 255, 255, 0.05);
+      padding: 0.3rem;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--card-border);
+    }
+
+    .tab-btn {
+      padding: 0.5rem 1.2rem;
+      border-radius: 6px;
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      background: none;
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .tab-btn.active {
+      background: var(--primary);
+      color: #fff;
+      box-shadow: 0 4px 12px var(--primary-glow);
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    /* Buttons */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.6rem 1.2rem;
+      border-radius: var(--radius-sm);
+      font-size: 0.875rem;
+      font-weight: 500;
+      cursor: pointer;
+      border: 1px solid transparent;
+      transition: all 0.2s ease;
+      text-decoration: none;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: #fff;
+      box-shadow: 0 4px 14px var(--primary-glow);
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-hover);
+      transform: translateY(-1px);
+    }
+
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.05);
+      border-color: var(--card-border);
+      color: var(--text-main);
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: var(--text-muted);
+    }
+
+    .btn-danger {
+      background: rgba(239, 68, 68, 0.2);
+      border-color: rgba(239, 68, 68, 0.4);
+      color: #fca5a5;
+    }
+
+    .btn-danger:hover {
+      background: var(--danger);
+      color: #fff;
+    }
+
+    .btn-sm {
+      padding: 0.35rem 0.75rem;
+      font-size: 0.775rem;
+    }
+
+    /* Layout */
+    main {
+      flex: 1;
+      max-width: 1400px;
       width: 100%;
+      margin: 0 auto;
+      padding: 2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+    }
+
+    /* Tab Content Panels */
+    .tab-panel {
+      display: none;
+      flex-direction: column;
+      gap: 2rem;
+    }
+
+    .tab-panel.active {
+      display: flex;
+    }
+
+    /* KPI Analytics Cards */
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1.25rem;
+    }
+
+    .kpi-card {
+      background: var(--card-bg);
+      backdrop-filter: blur(10px);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius-md);
+      padding: 1.25rem 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 1.25rem;
+      box-shadow: var(--shadow);
+    }
+
+    .kpi-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .kpi-content h3 {
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .kpi-content .kpi-value {
+      font-size: 1.75rem;
+      font-weight: 700;
+      margin-top: 0.25rem;
+      color: #fff;
+    }
+
+    .kpi-content .kpi-sub {
+      font-size: 0.75rem;
+      color: var(--accent);
+      margin-top: 0.2rem;
+    }
+
+    /* Controls Bar */
+    .controls-card {
+      background: var(--card-bg);
+      backdrop-filter: blur(10px);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius-md);
+      padding: 1rem 1.5rem;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+
+    .search-box {
+      flex: 1;
+      min-width: 260px;
+      position: relative;
+    }
+
+    .search-box input {
+      width: 100%;
+      background: var(--input-bg);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      padding: 0.65rem 1rem 0.65rem 2.5rem;
+      color: var(--text-main);
+      font-size: 0.875rem;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .search-box input:focus {
+      border-color: var(--primary);
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 0.85rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-muted);
+      font-size: 0.9rem;
+    }
+
+    .filter-group {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+    }
+
+    select, input[type="text"], input[type="email"], input[type="number"], input[type="date"] {
+      background: var(--input-bg);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      padding: 0.65rem 1rem;
+      color: var(--text-main);
+      font-size: 0.875rem;
+      outline: none;
+    }
+
+    select:focus, input:focus {
+      border-color: var(--primary);
+    }
+
+    /* Table Section */
+    .table-container {
+      background: var(--card-bg);
+      backdrop-filter: blur(10px);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      box-shadow: var(--shadow);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+    }
+
+    th {
+      background: rgba(15, 23, 42, 0.6);
+      padding: 1rem 1.25rem;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+      border-bottom: 1px solid var(--card-border);
+    }
+
+    td {
+      padding: 1rem 1.25rem;
+      font-size: 0.875rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      vertical-align: middle;
+    }
+
+    tbody tr {
+      transition: background-color 0.15s ease;
+    }
+
+    tbody tr:hover {
+      background: rgba(255, 255, 255, 0.03);
+    }
+
+    .emp-profile, .dept-profile {
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+    }
+
+    .avatar {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #4f46e5, #06b6d4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      font-size: 0.85rem;
+      color: #fff;
+    }
+
+    .dept-code-badge {
+      width: 42px;
+      height: 42px;
+      border-radius: var(--radius-sm);
+      background: linear-gradient(135deg, #0284c7, #0d9488);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 0.85rem;
+      color: #fff;
+    }
+
+    .emp-name, .dept-name {
+      font-weight: 600;
+      color: #fff;
+    }
+
+    .emp-sub, .dept-sub {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    /* Badges */
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.25rem 0.65rem;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+
+    .status-active {
+      background: rgba(16, 185, 129, 0.15);
+      color: #34d399;
+      border: 1px solid rgba(16, 185, 129, 0.3);
+    }
+
+    .status-onleave {
+      background: rgba(245, 158, 11, 0.15);
+      color: #fbbf24;
+      border: 1px solid rgba(245, 158, 11, 0.3);
+    }
+
+    .status-terminated {
+      background: rgba(239, 68, 68, 0.15);
+      color: #f87171;
+      border: 1px solid rgba(239, 68, 68, 0.3);
+    }
+
+    .count-pill {
+      background: rgba(99, 102, 241, 0.15);
+      color: #818cf8;
+      padding: 0.2rem 0.6rem;
+      border-radius: 9999px;
+      font-weight: 600;
+      font-size: 0.8rem;
+    }
+
+    .actions-cell {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    /* Modal Overlay */
+    .modal-overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(15, 23, 42, 0.8);
+      backdrop-filter: blur(8px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s ease;
+      padding: 1.5rem;
+    }
+
+    .modal-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .modal {
+      background: var(--card-bg-solid);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius-lg);
+      width: 100%;
+      max-width: 600px;
+      max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+      transform: translateY(20px);
+      transition: transform 0.25s ease;
+    }
+
+    .modal-overlay.active .modal {
+      transform: translateY(0);
+    }
+
+    .modal-header {
+      padding: 1.25rem 1.5rem;
+      border-bottom: 1px solid var(--card-border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .modal-header h2 {
+      font-size: 1.15rem;
+      font-weight: 600;
+    }
+
+    .close-btn {
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      font-size: 1.5rem;
+      cursor: pointer;
+      line-height: 1;
+    }
+
+    .close-btn:hover { color: #fff; }
+
+    .modal-body { padding: 1.5rem; }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.25rem;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+
+    .form-group.full-width { grid-column: span 2; }
+
+    label {
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: var(--text-muted);
+    }
+
+    .modal-footer {
+      padding: 1.25rem 1.5rem;
+      border-top: 1px solid var(--card-border);
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 0.75rem;
+    }
+
+    /* Toast Container */
+    .toast-container {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      z-index: 1100;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .toast {
+      background: var(--card-bg-solid);
+      border: 1px solid var(--card-border);
+      border-left: 4px solid var(--primary);
+      padding: 1rem 1.25rem;
+      border-radius: var(--radius-sm);
+      box-shadow: var(--shadow);
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      min-width: 280px;
+      max-width: 400px;
+      animation: slideIn 0.3s ease forwards;
+    }
+
+    .toast.success { border-left-color: var(--success); }
+    .toast.error { border-left-color: var(--danger); }
+
+    @keyframes slideIn {
+      from { transform: translateX(100%); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+
+    .empty-state {
+      padding: 3rem;
+      text-align: center;
+      color: var(--text-muted);
     }
   </style>
+</head>
+<body>
+
+  <!-- Header & Navigation -->
+  <header>
+    <div class="nav-container">
+      <div class="brand">
+        <div class="brand-logo">HR</div>
+        <div class="brand-text">
+          <h1>HR Management Studio</h1>
+          <p>SAP BTP Cloud Application Programming Model</p>
+        </div>
+      </div>
+
+      <!-- Navigation Tabs -->
+      <div class="tab-navigation">
+        <button class="tab-btn active" id="tab-employees-btn" onclick="switchTab('employees')">
+          👥 Employees
+        </button>
+        <button class="tab-btn" id="tab-depts-btn" onclick="switchTab('depts')">
+          🏢 Departments
+        </button>
+      </div>
+
+      <div class="header-actions">
+        <button class="btn btn-secondary" onclick="loadDashboard()">🔄 Refresh</button>
+        <button class="btn btn-primary" id="main-cta-btn" onclick="openAddModal()">➕ Add Employee</button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- TAB 1: EMPLOYEES PANEL -->
+    <div class="tab-panel active" id="panel-employees">
+      <!-- KPI Analytics Cards -->
+      <section class="kpi-grid">
+        <div class="kpi-card">
+          <div class="kpi-icon">👥</div>
+          <div class="kpi-content">
+            <h3>Total Employees</h3>
+            <div class="kpi-value" id="kpi-total">0</div>
+            <div class="kpi-sub">Across all departments</div>
+          </div>
+        </div>
+
+        <div class="kpi-card">
+          <div class="kpi-icon">✅</div>
+          <div class="kpi-content">
+            <h3>Active Workforce</h3>
+            <div class="kpi-value" id="kpi-active">0</div>
+            <div class="kpi-sub" id="kpi-active-sub">0% active status</div>
+          </div>
+        </div>
+
+        <div class="kpi-card">
+          <div class="kpi-icon">💰</div>
+          <div class="kpi-content">
+            <h3>Average Salary</h3>
+            <div class="kpi-value" id="kpi-avg-salary">$0</div>
+            <div class="kpi-sub">Annual base pay</div>
+          </div>
+        </div>
+
+        <div class="kpi-card">
+          <div class="kpi-icon">🏢</div>
+          <div class="kpi-content">
+            <h3>Departments</h3>
+            <div class="kpi-value" id="kpi-depts">0</div>
+            <div class="kpi-sub">Active Org Units</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Controls & Search -->
+      <section class="controls-card">
+        <div class="search-box">
+          <span class="search-icon">🔍</span>
+          <input type="text" id="search-input" placeholder="Search employees by name, email, or job title..." oninput="renderEmployeeTable()">
+        </div>
+        <div class="filter-group">
+          <select id="filter-dept" onchange="renderEmployeeTable()">
+            <option value="">All Departments</option>
+          </select>
+          <select id="filter-status" onchange="renderEmployeeTable()">
+            <option value="">All Statuses</option>
+            <option value="Active">Active</option>
+            <option value="On Leave">On Leave</option>
+            <option value="Terminated">Terminated</option>
+          </select>
+        </div>
+      </section>
+
+      <!-- Employee Data Table -->
+      <section class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>Employee</th>
+              <th>Job Title</th>
+              <th>Department</th>
+              <th>Status</th>
+              <th>Salary</th>
+              <th>Hire Date</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="employee-tbody">
+            <!-- Rows rendered dynamically -->
+          </tbody>
+        </table>
+        <div id="emp-empty-state" class="empty-state" style="display: none;">
+          <div style="font-size: 2.5rem;">🔍</div>
+          <p style="margin-top: 0.5rem;">No employees found matching your criteria.</p>
+        </div>
+      </section>
+    </div>
+
+    <!-- TAB 2: DEPARTMENTS PANEL -->
+    <div class="tab-panel" id="panel-depts">
+      <!-- Department Analytics Cards -->
+      <section class="kpi-grid">
+        <div class="kpi-card">
+          <div class="kpi-icon">🏢</div>
+          <div class="kpi-content">
+            <h3>Total Departments</h3>
+            <div class="kpi-value" id="dept-kpi-total">0</div>
+            <div class="kpi-sub">Organizational structure</div>
+          </div>
+        </div>
+
+        <div class="kpi-card">
+          <div class="kpi-icon">👨‍💼</div>
+          <div class="kpi-content">
+            <h3>Assigned Staff</h3>
+            <div class="kpi-value" id="dept-kpi-staff">0</div>
+            <div class="kpi-sub">Total staff in departments</div>
+          </div>
+        </div>
+
+        <div class="kpi-card">
+          <div class="kpi-icon">📊</div>
+          <div class="kpi-content">
+            <h3>Largest Department</h3>
+            <div class="kpi-value" id="dept-kpi-largest">-</div>
+            <div class="kpi-sub" id="dept-kpi-largest-sub">0 employees</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Department Controls -->
+      <section class="controls-card">
+        <div class="search-box">
+          <span class="search-icon">🔍</span>
+          <input type="text" id="dept-search-input" placeholder="Search departments by name or code..." oninput="renderDeptTable()">
+        </div>
+        <button class="btn btn-primary" onclick="openAddDeptModal()">➕ Add Department</button>
+      </section>
+
+      <!-- Department Table -->
+      <section class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>Department</th>
+              <th>Code</th>
+              <th>Description</th>
+              <th>Headcount</th>
+              <th>Total Salary Budget</th>
+              <th>Avg Salary</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="dept-tbody">
+            <!-- Rows rendered dynamically -->
+          </tbody>
+        </table>
+        <div id="dept-empty-state" class="empty-state" style="display: none;">
+          <div style="font-size: 2.5rem;">🏢</div>
+          <p style="margin-top: 0.5rem;">No departments found.</p>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <!-- Add / Edit Employee Modal -->
+  <div class="modal-overlay" id="employee-modal">
+    <div class="modal">
+      <div class="modal-header">
+        <h2 id="modal-title">Add New Employee</h2>
+        <button class="close-btn" onclick="closeModal('employee-modal')">&times;</button>
+      </div>
+      <form id="employee-form" onsubmit="handleEmployeeSubmit(event)">
+        <input type="hidden" id="emp-id">
+        <div class="modal-body">
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="emp-firstname">First Name *</label>
+              <input type="text" id="emp-firstname" required placeholder="e.g. John">
+            </div>
+            <div class="form-group">
+              <label for="emp-lastname">Last Name *</label>
+              <input type="text" id="emp-lastname" required placeholder="e.g. Doe">
+            </div>
+            <div class="form-group full-width">
+              <label for="emp-email">Email Address *</label>
+              <input type="email" id="emp-email" required placeholder="e.g. john.doe@company.com">
+            </div>
+            <div class="form-group">
+              <label for="emp-phone">Phone Number</label>
+              <input type="text" id="emp-phone" placeholder="+1 (555) 000-0000">
+            </div>
+            <div class="form-group">
+              <label for="emp-jobtitle">Job Title</label>
+              <input type="text" id="emp-jobtitle" placeholder="e.g. Senior Software Engineer">
+            </div>
+            <div class="form-group">
+              <label for="emp-dept">Department</label>
+              <select id="emp-dept">
+                <option value="">Select Department</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="emp-salary">Base Salary (USD)</label>
+              <input type="number" id="emp-salary" step="1000" placeholder="e.g. 95000">
+            </div>
+            <div class="form-group">
+              <label for="emp-hiredate">Hire Date</label>
+              <input type="date" id="emp-hiredate">
+            </div>
+            <div class="form-group">
+              <label for="emp-status">Employment Status</label>
+              <select id="emp-status">
+                <option value="Active">Active</option>
+                <option value="On Leave">On Leave</option>
+                <option value="Terminated">Terminated</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="closeModal('employee-modal')">Cancel</button>
+          <button type="submit" class="btn btn-primary">Save Employee</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Promote Employee Modal -->
+  <div class="modal-overlay" id="promote-modal">
+    <div class="modal" style="max-width: 450px;">
+      <div class="modal-header">
+        <h2>Promote Employee</h2>
+        <button class="close-btn" onclick="closeModal('promote-modal')">&times;</button>
+      </div>
+      <form id="promote-form" onsubmit="handlePromoteSubmit(event)">
+        <input type="hidden" id="promote-emp-id">
+        <div class="modal-body">
+          <p id="promote-emp-name" style="margin-bottom: 1rem; color: var(--accent); font-weight: 600;"></p>
+          <div class="form-group" style="margin-bottom: 1rem;">
+            <label for="promote-jobtitle">New Job Title</label>
+            <input type="text" id="promote-jobtitle" required placeholder="e.g. Lead Engineer">
+          </div>
+          <div class="form-group">
+            <label for="promote-raise">Salary Increase (%)</label>
+            <input type="number" id="promote-raise" min="0" max="100" step="0.5" value="10" required>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="closeModal('promote-modal')">Cancel</button>
+          <button type="submit" class="btn btn-primary">Promote</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Transfer Employee Department Modal -->
+  <div class="modal-overlay" id="transfer-modal">
+    <div class="modal" style="max-width: 450px;">
+      <div class="modal-header">
+        <h2>Transfer Department</h2>
+        <button class="close-btn" onclick="closeModal('transfer-modal')">&times;</button>
+      </div>
+      <form id="transfer-form" onsubmit="handleTransferSubmit(event)">
+        <input type="hidden" id="transfer-emp-id">
+        <div class="modal-body">
+          <p id="transfer-emp-info" style="margin-bottom: 1rem; color: var(--accent); font-weight: 600;"></p>
+          <div class="form-group">
+            <label for="transfer-target-dept">Target Department *</label>
+            <select id="transfer-target-dept" required>
+              <option value="">Select Target Department</option>
+            </select>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="closeModal('transfer-modal')">Cancel</button>
+          <button type="submit" class="btn btn-primary">Transfer</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Add / Edit Department Modal -->
+  <div class="modal-overlay" id="dept-modal">
+    <div class="modal" style="max-width: 500px;">
+      <div class="modal-header">
+        <h2 id="dept-modal-title">Add Department</h2>
+        <button class="close-btn" onclick="closeModal('dept-modal')">&times;</button>
+      </div>
+      <form id="dept-form" onsubmit="handleDeptSubmit(event)">
+        <input type="hidden" id="dept-id">
+        <div class="modal-body">
+          <div class="form-group" style="margin-bottom: 1rem;">
+            <label for="dept-name">Department Name *</label>
+            <input type="text" id="dept-name" required placeholder="e.g. Software Engineering">
+          </div>
+          <div class="form-group" style="margin-bottom: 1rem;">
+            <label for="dept-code">Department Code *</label>
+            <input type="text" id="dept-code" required placeholder="e.g. ENG">
+          </div>
+          <div class="form-group">
+            <label for="dept-desc">Description</label>
+            <input type="text" id="dept-desc" placeholder="e.g. Product design and development team">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="closeModal('dept-modal')">Cancel</button>
+          <button type="submit" class="btn btn-primary">Save Department</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Department Assigned Employees View Modal -->
+  <div class="modal-overlay" id="dept-members-modal">
+    <div class="modal" style="max-width: 650px;">
+      <div class="modal-header">
+        <h2 id="dept-members-title">Assigned Staff</h2>
+        <button class="close-btn" onclick="closeModal('dept-members-modal')">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="table-container" style="max-height: 350px; overflow-y: auto;">
+          <table>
+            <thead>
+              <tr>
+                <th>Employee</th>
+                <th>Job Title</th>
+                <th>Status</th>
+                <th>Salary</th>
+              </tr>
+            </thead>
+            <tbody id="dept-members-tbody">
+              <!-- Rendered dynamically -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-primary" id="dept-members-add-btn">➕ Add Employee to Department</button>
+        <button class="btn btn-secondary" onclick="closeModal('dept-members-modal')">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Container -->
+  <div class="toast-container" id="toast-container"></div>
 
   <script>
-    sap.ui.getCore().attachInit(function() {
-      sap.ui.require([
-        "sap/ui/core/ComponentContainer"
-      ], function(ComponentContainer) {
-        new ComponentContainer({
-          name: "employee.management.ui",
-          settings: {
-            id: "employee-management-app"
-          },
-          async: true,
-          height: "100%",
-          width: "100%"
-        }).placeAt("content");
-      });
+    const API_BASE = '/service/employee';
+    let employeesData = [];
+    let departmentsData = [];
+    let currentTab = 'employees';
+
+    // Initialize Application
+    document.addEventListener('DOMContentLoaded', () => {
+      loadDashboard();
     });
+
+    // Tab Switching Logic
+    function switchTab(tab) {
+      currentTab = tab;
+      document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+      document.querySelectorAll('.tab-panel').forEach(panel => panel.classList.remove('active'));
+
+      document.getElementById(`tab-${tab}-btn`).classList.add('active');
+      document.getElementById(`panel-${tab}`).classList.add('active');
+
+      const ctaBtn = document.getElementById('main-cta-btn');
+      if (tab === 'employees') {
+        ctaBtn.innerHTML = '➕ Add Employee';
+        ctaBtn.onclick = openAddModal;
+      } else {
+        ctaBtn.innerHTML = '➕ Add Department';
+        ctaBtn.onclick = openAddDeptModal;
+      }
+    }
+
+    async function loadDashboard() {
+      try {
+        await Promise.all([fetchDepartments(), fetchEmployees()]);
+        renderEmployeeKPIs();
+        renderEmployeeTable();
+        renderDeptKPIs();
+        renderDeptTable();
+      } catch (err) {
+        showToast('Failed to load data: ' + err.message, 'error');
+      }
+    }
+
+    // Fetch Departments from CAP Service
+    async function fetchDepartments() {
+      const res = await fetch(`${API_BASE}/Departments`);
+      const data = await res.json();
+      departmentsData = data.value || [];
+      populateDepartmentSelects();
+    }
+
+    // Fetch Employees
+    async function fetchEmployees() {
+      const res = await fetch(`${API_BASE}/Employees?$expand=department`);
+      const data = await res.json();
+      employeesData = data.value || [];
+    }
+
+    // Populate Select options
+    function populateDepartmentSelects() {
+      const filterSelect = document.getElementById('filter-dept');
+      const formSelect = document.getElementById('emp-dept');
+
+      const filterVal = filterSelect.value;
+      const formVal = formSelect.value;
+
+      filterSelect.innerHTML = '<option value="">All Departments</option>';
+      formSelect.innerHTML = '<option value="">Select Department</option>';
+
+      departmentsData.forEach(dept => {
+        filterSelect.innerHTML += `<option value="${dept.ID}">${dept.name}</option>`;
+        formSelect.innerHTML += `<option value="${dept.ID}">${dept.name}</option>`;
+      });
+
+      filterSelect.value = filterVal;
+      formSelect.value = formVal;
+    }
+
+    // Render Employee KPIs
+    function renderEmployeeKPIs() {
+      const total = employeesData.length;
+      const activeCount = employeesData.filter(e => e.status === 'Active').length;
+      const totalSalary = employeesData.reduce((acc, e) => acc + Number(e.salary || 0), 0);
+      const avgSalary = total > 0 ? Math.round(totalSalary / total) : 0;
+
+      document.getElementById('kpi-total').textContent = total;
+      document.getElementById('kpi-active').textContent = activeCount;
+      document.getElementById('kpi-active-sub').textContent = `${total > 0 ? Math.round((activeCount/total)*100) : 0}% active status`;
+      document.getElementById('kpi-avg-salary').textContent = `$${avgSalary.toLocaleString()}`;
+      document.getElementById('kpi-depts').textContent = departmentsData.length;
+    }
+
+    // Render Employee Table
+    function renderEmployeeTable() {
+      const search = document.getElementById('search-input').value.toLowerCase().trim();
+      const deptFilter = document.getElementById('filter-dept').value;
+      const statusFilter = document.getElementById('filter-status').value;
+
+      const filtered = employeesData.filter(emp => {
+        const matchesSearch = !search || 
+          `${emp.firstName} ${emp.lastName}`.toLowerCase().includes(search) ||
+          (emp.email && emp.email.toLowerCase().includes(search)) ||
+          (emp.jobTitle && emp.jobTitle.toLowerCase().includes(search));
+
+        const matchesDept = !deptFilter || emp.department_ID === deptFilter;
+        const matchesStatus = !statusFilter || emp.status === statusFilter;
+
+        return matchesSearch && matchesDept && matchesStatus;
+      });
+
+      const tbody = document.getElementById('employee-tbody');
+      const emptyState = document.getElementById('emp-empty-state');
+
+      if (filtered.length === 0) {
+        tbody.innerHTML = '';
+        emptyState.style.display = 'block';
+        return;
+      }
+
+      emptyState.style.display = 'none';
+      tbody.innerHTML = filtered.map(emp => {
+        const initials = `${emp.firstName?.[0] || ''}${emp.lastName?.[0] || ''}`.toUpperCase();
+        const deptName = emp.department?.name || 'Unassigned';
+        const salary = emp.salary ? `$${Number(emp.salary).toLocaleString()}` : '-';
+        const hireDate = emp.hireDate || '-';
+        
+        let statusClass = 'status-active';
+        if (emp.status === 'On Leave') statusClass = 'status-onleave';
+        if (emp.status === 'Terminated') statusClass = 'status-terminated';
+
+        return `
+          <tr>
+            <td>
+              <div class="emp-profile">
+                <div class="avatar">${initials}</div>
+                <div>
+                  <div class="emp-name">${emp.firstName} ${emp.lastName}</div>
+                  <div class="emp-sub">${emp.email}</div>
+                </div>
+              </div>
+            </td>
+            <td>${emp.jobTitle || '-'}</td>
+            <td>${deptName}</td>
+            <td><span class="status-badge ${statusClass}">${emp.status || 'Active'}</span></td>
+            <td>${salary}</td>
+            <td>${hireDate}</td>
+            <td>
+              <div class="actions-cell">
+                <button class="btn btn-secondary btn-sm" onclick="openEditModal('${emp.ID}')">✏️ Edit</button>
+                <button class="btn btn-secondary btn-sm" onclick="openTransferModal('${emp.ID}')">🔄 Transfer</button>
+                <button class="btn btn-secondary btn-sm" onclick="openPromoteModal('${emp.ID}')">🚀 Promote</button>
+                <button class="btn btn-danger btn-sm" onclick="deleteEmployee('${emp.ID}', '${emp.firstName} ${emp.lastName}')">🗑️</button>
+              </div>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    // Render Department KPIs
+    function renderDeptKPIs() {
+      document.getElementById('dept-kpi-total').textContent = departmentsData.length;
+      document.getElementById('dept-kpi-staff').textContent = employeesData.length;
+
+      // Find largest department
+      const counts = {};
+      employeesData.forEach(e => {
+        if (e.department_ID) {
+          counts[e.department_ID] = (counts[e.department_ID] || 0) + 1;
+        }
+      });
+
+      let largestId = null;
+      let maxCount = 0;
+      Object.keys(counts).forEach(id => {
+        if (counts[id] > maxCount) {
+          maxCount = counts[id];
+          largestId = id;
+        }
+      });
+
+      const largestDept = departmentsData.find(d => d.ID === largestId);
+      if (largestDept) {
+        document.getElementById('dept-kpi-largest').textContent = largestDept.name;
+        document.getElementById('dept-kpi-largest-sub').textContent = `${maxCount} employees assigned`;
+      } else {
+        document.getElementById('dept-kpi-largest').textContent = 'N/A';
+        document.getElementById('dept-kpi-largest-sub').textContent = '0 employees';
+      }
+    }
+
+    // Render Department Table
+    function renderDeptTable() {
+      const search = document.getElementById('dept-search-input').value.toLowerCase().trim();
+      const filtered = departmentsData.filter(dept => {
+        return !search ||
+          dept.name.toLowerCase().includes(search) ||
+          dept.code.toLowerCase().includes(search) ||
+          (dept.description && dept.description.toLowerCase().includes(search));
+      });
+
+      const tbody = document.getElementById('dept-tbody');
+      const emptyState = document.getElementById('dept-empty-state');
+
+      if (filtered.length === 0) {
+        tbody.innerHTML = '';
+        emptyState.style.display = 'block';
+        return;
+      }
+
+      emptyState.style.display = 'none';
+      tbody.innerHTML = filtered.map(dept => {
+        const assignedEmps = employeesData.filter(e => e.department_ID === dept.ID);
+        const headcount = assignedEmps.length;
+        const totalBudget = assignedEmps.reduce((acc, e) => acc + Number(e.salary || 0), 0);
+        const avgBudget = headcount > 0 ? Math.round(totalBudget / headcount) : 0;
+
+        return `
+          <tr>
+            <td>
+              <div class="dept-profile">
+                <div class="dept-code-badge">${dept.code}</div>
+                <div>
+                  <div class="dept-name">${dept.name}</div>
+                  <div class="dept-sub">${dept.description || 'No description'}</div>
+                </div>
+              </div>
+            </td>
+            <td><strong>${dept.code}</strong></td>
+            <td>${dept.description || '-'}</td>
+            <td><span class="count-pill">${headcount} Staff</span></td>
+            <td>$${totalBudget.toLocaleString()}</td>
+            <td>$${avgBudget.toLocaleString()}</td>
+            <td>
+              <div class="actions-cell">
+                <button class="btn btn-primary btn-sm" onclick="openAddModal('${dept.ID}')">➕ Add Staff</button>
+                <button class="btn btn-secondary btn-sm" onclick="viewDeptMembers('${dept.ID}', '${dept.name}')">👥 View Staff (${headcount})</button>
+                <button class="btn btn-secondary btn-sm" onclick="openEditDeptModal('${dept.ID}')">✏️ Edit</button>
+                <button class="btn btn-danger btn-sm" onclick="deleteDepartment('${dept.ID}', '${dept.name}', ${headcount})">🗑️</button>
+              </div>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    // Modal Control Helpers
+    function openModal(id) { document.getElementById(id).classList.add('active'); }
+    function closeModal(id) { document.getElementById(id).classList.remove('active'); }
+
+    // Open Add Employee Modal
+    function openAddModal(defaultDeptId = '') {
+      const deptObj = departmentsData.find(d => d.ID === defaultDeptId);
+      document.getElementById('modal-title').textContent = deptObj ? `Add New Employee to ${deptObj.name}` : 'Add New Employee';
+      document.getElementById('employee-form').reset();
+      document.getElementById('emp-id').value = '';
+      if (defaultDeptId) {
+        document.getElementById('emp-dept').value = defaultDeptId;
+      }
+      openModal('employee-modal');
+    }
+
+    // Open Edit Employee Modal
+    function openEditModal(empId) {
+      const emp = employeesData.find(e => e.ID === empId);
+      if (!emp) return;
+
+      document.getElementById('modal-title').textContent = 'Edit Employee Profile';
+      document.getElementById('emp-id').value = emp.ID;
+      document.getElementById('emp-firstname').value = emp.firstName || '';
+      document.getElementById('emp-lastname').value = emp.lastName || '';
+      document.getElementById('emp-email').value = emp.email || '';
+      document.getElementById('emp-phone').value = emp.phone || '';
+      document.getElementById('emp-jobtitle').value = emp.jobTitle || '';
+      document.getElementById('emp-dept').value = emp.department_ID || '';
+      document.getElementById('emp-salary').value = emp.salary || '';
+      document.getElementById('emp-hiredate').value = emp.hireDate || '';
+      document.getElementById('emp-status').value = emp.status || 'Active';
+
+      openModal('employee-modal');
+    }
+
+    // Handle Employee Form Submit
+    async function handleEmployeeSubmit(event) {
+      event.preventDefault();
+      const empId = document.getElementById('emp-id').value;
+
+      const payload = {
+        firstName: document.getElementById('emp-firstname').value.trim(),
+        lastName: document.getElementById('emp-lastname').value.trim(),
+        email: document.getElementById('emp-email').value.trim(),
+        phone: document.getElementById('emp-phone').value.trim() || null,
+        jobTitle: document.getElementById('emp-jobtitle').value.trim() || null,
+        department_ID: document.getElementById('emp-dept').value || null,
+        salary: document.getElementById('emp-salary').value ? Number(document.getElementById('emp-salary').value) : null,
+        hireDate: document.getElementById('emp-hiredate').value || null,
+        status: document.getElementById('emp-status').value
+      };
+
+      try {
+        let res;
+        if (empId) {
+          res = await fetch(`${API_BASE}/Employees('${empId}')`, {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+          });
+        } else {
+          res = await fetch(`${API_BASE}/Employees`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+          });
+        }
+
+        if (!res.ok) {
+          const errData = await res.json();
+          throw new Error(errData.error?.message || 'Operation failed');
+        }
+
+        showToast(empId ? 'Employee updated' : 'Employee added', 'success');
+        closeModal('employee-modal');
+        await loadDashboard();
+      } catch (err) {
+        showToast(err.message, 'error');
+      }
+    }
+
+    // Open Promote Modal
+    function openPromoteModal(empId) {
+      const emp = employeesData.find(e => e.ID === empId);
+      if (!emp) return;
+
+      document.getElementById('promote-emp-id').value = emp.ID;
+      document.getElementById('promote-emp-name').textContent = `Promoting: ${emp.firstName} ${emp.lastName}`;
+      document.getElementById('promote-jobtitle').value = emp.jobTitle ? `Senior ${emp.jobTitle}` : 'Lead Developer';
+      document.getElementById('promote-raise').value = 10;
+
+      openModal('promote-modal');
+    }
+
+    // Handle Promote Action
+    async function handlePromoteSubmit(event) {
+      event.preventDefault();
+      const empId = document.getElementById('promote-emp-id').value;
+      const newJobTitle = document.getElementById('promote-jobtitle').value.trim();
+      const salaryIncreasePercent = Number(document.getElementById('promote-raise').value);
+
+      try {
+        const res = await fetch(`${API_BASE}/Employees('${empId}')/EmployeeService.promoteEmployee`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ newJobTitle, salaryIncreasePercent })
+        });
+
+        if (!res.ok) {
+          const errData = await res.json();
+          throw new Error(errData.error?.message || 'Promotion failed');
+        }
+
+        showToast('Employee promoted successfully!', 'success');
+        closeModal('promote-modal');
+        await loadDashboard();
+      } catch (err) {
+        showToast(err.message, 'error');
+      }
+    }
+
+    // Open Transfer Department Modal
+    function openTransferModal(empId) {
+      const emp = employeesData.find(e => e.ID === empId);
+      if (!emp) return;
+
+      document.getElementById('transfer-emp-id').value = emp.ID;
+      const currentDeptName = emp.department?.name || 'Unassigned';
+      document.getElementById('transfer-emp-info').textContent = `Transferring: ${emp.firstName} ${emp.lastName} (Current: ${currentDeptName})`;
+
+      const targetSelect = document.getElementById('transfer-target-dept');
+      targetSelect.innerHTML = '<option value="">Select Target Department</option>';
+      departmentsData.forEach(dept => {
+        targetSelect.innerHTML += `<option value="${dept.ID}">${dept.name} (${dept.code})</option>`;
+      });
+      targetSelect.value = emp.department_ID || '';
+
+      openModal('transfer-modal');
+    }
+
+    // Handle Transfer Action
+    async function handleTransferSubmit(event) {
+      event.preventDefault();
+      const empId = document.getElementById('transfer-emp-id').value;
+      const newDepartment_ID = document.getElementById('transfer-target-dept').value;
+
+      try {
+        const res = await fetch(`${API_BASE}/Employees('${empId}')/EmployeeService.transferDepartment`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ newDepartment_ID })
+        });
+
+        if (!res.ok) {
+          const errData = await res.json();
+          throw new Error(errData.error?.message || 'Transfer failed');
+        }
+
+        showToast('Employee department transferred successfully!', 'success');
+        closeModal('transfer-modal');
+        await loadDashboard();
+      } catch (err) {
+        showToast(err.message, 'error');
+      }
+    }
+
+    // Delete Employee
+    async function deleteEmployee(empId, name) {
+      if (!confirm(`Are you sure you want to delete ${name}?`)) return;
+
+      try {
+        const res = await fetch(`${API_BASE}/Employees('${empId}')`, { method: 'DELETE' });
+        if (!res.ok && res.status !== 204) {
+          const errData = await res.json();
+          throw new Error(errData.error?.message || 'Delete failed');
+        }
+
+        showToast('Employee deleted', 'success');
+        await loadDashboard();
+      } catch (err) {
+        showToast(err.message, 'error');
+      }
+    }
+
+    // --- Department Modals & Actions ---
+    function openAddDeptModal() {
+      document.getElementById('dept-modal-title').textContent = 'Add Department';
+      document.getElementById('dept-form').reset();
+      document.getElementById('dept-id').value = '';
+      openModal('dept-modal');
+    }
+
+    function openEditDeptModal(deptId) {
+      const dept = departmentsData.find(d => d.ID === deptId);
+      if (!dept) return;
+
+      document.getElementById('dept-modal-title').textContent = 'Edit Department';
+      document.getElementById('dept-id').value = dept.ID;
+      document.getElementById('dept-name').value = dept.name || '';
+      document.getElementById('dept-code').value = dept.code || '';
+      document.getElementById('dept-desc').value = dept.description || '';
+
+      openModal('dept-modal');
+    }
+
+    async function handleDeptSubmit(event) {
+      event.preventDefault();
+      const deptId = document.getElementById('dept-id').value;
+      const payload = {
+        name: document.getElementById('dept-name').value.trim(),
+        code: document.getElementById('dept-code').value.trim(),
+        description: document.getElementById('dept-desc').value.trim() || null
+      };
+
+      try {
+        let res;
+        if (deptId) {
+          res = await fetch(`${API_BASE}/Departments('${deptId}')`, {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+          });
+        } else {
+          res = await fetch(`${API_BASE}/Departments`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+          });
+        }
+
+        if (!res.ok) {
+          const errData = await res.json();
+          throw new Error(errData.error?.message || 'Operation failed');
+        }
+
+        showToast(deptId ? 'Department updated' : 'Department added', 'success');
+        closeModal('dept-modal');
+        await loadDashboard();
+      } catch (err) {
+        showToast(err.message, 'error');
+      }
+    }
+
+    async function deleteDepartment(deptId, deptName, headcount) {
+      if (headcount > 0) {
+        alert(`Cannot delete ${deptName}: ${headcount} employee(s) are currently assigned to this department. Reassign them first.`);
+        return;
+      }
+
+      if (!confirm(`Are you sure you want to delete ${deptName}?`)) return;
+
+      try {
+        const res = await fetch(`${API_BASE}/Departments('${deptId}')`, { method: 'DELETE' });
+        if (!res.ok && res.status !== 204) {
+          const errData = await res.json();
+          throw new Error(errData.error?.message || 'Delete failed');
+        }
+
+        showToast('Department deleted', 'success');
+        await loadDashboard();
+      } catch (err) {
+        showToast(err.message, 'error');
+      }
+    }
+
+    function viewDeptMembers(deptId, deptName) {
+      const assigned = employeesData.filter(e => e.department_ID === deptId);
+      document.getElementById('dept-members-title').textContent = `${deptName} (${assigned.length} Employees)`;
+      const tbody = document.getElementById('dept-members-tbody');
+
+      const addBtn = document.getElementById('dept-members-add-btn');
+      addBtn.onclick = () => {
+        closeModal('dept-members-modal');
+        openAddModal(deptId);
+      };
+
+      if (assigned.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="4" style="text-align: center; color: var(--text-muted);">No staff assigned to this department.</td></tr>`;
+      } else {
+        tbody.innerHTML = assigned.map(emp => `
+          <tr>
+            <td><strong>${emp.firstName} ${emp.lastName}</strong><br><span style="font-size:0.75rem; color:var(--text-muted);">${emp.email}</span></td>
+            <td>${emp.jobTitle || '-'}</td>
+            <td><span class="status-badge ${emp.status==='Active'?'status-active':emp.status==='On Leave'?'status-onleave':'status-terminated'}">${emp.status}</span></td>
+            <td>$${Number(emp.salary || 0).toLocaleString()}</td>
+          </tr>
+        `).join('');
+      }
+
+      openModal('dept-members-modal');
+    }
+
+    // Toast Notification System
+    function showToast(message, type = 'success') {
+      const container = document.getElementById('toast-container');
+      const toast = document.createElement('div');
+      toast.className = `toast ${type}`;
+      toast.innerHTML = `
+        <span style="font-size: 1.2rem;">${type === 'success' ? '✅' : '⚠️'}</span>
+        <div>${message}</div>
+      `;
+      container.appendChild(toast);
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transform = 'translateX(100%)';
+        toast.style.transition = 'all 0.3s ease';
+        setTimeout(() => toast.remove(), 300);
+      }, 3500);
+    }
   </script>
-</head>
-<body class="sapUiBody" id="content">
 </body>
 </html>
