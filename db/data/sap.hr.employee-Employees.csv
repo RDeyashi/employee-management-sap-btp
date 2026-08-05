@@ -1,0 +1,5 @@
+ID;firstName;lastName;email;phone;hireDate;jobTitle;salary;currency;status;department_ID
+a10b6911-37f2-4e89-9e32-263a76387001;John;Doe;john.doe@example.com;+15550101;2021-03-15;Senior Software Engineer;115000.00;USD;Active;c50b6911-37f2-4e89-9e32-263a76387001
+a10b6911-37f2-4e89-9e32-263a76387002;Jane;Smith;jane.smith@example.com;+15550102;2020-07-01;Engineering Manager;145000.00;USD;Active;c50b6911-37f2-4e89-9e32-263a76387001
+a10b6911-37f2-4e89-9e32-263a76387003;Alice;Johnson;alice.j@example.com;+15550103;2022-01-10;HR Specialist;75000.00;USD;Active;c50b6911-37f2-4e89-9e32-263a76387002
+a10b6911-37f2-4e89-9e32-263a76387004;Bob;Brown;bob.brown@example.com;+15550104;2019-11-20;Sales Executive;95000.00;USD;Active;c50b6911-37f2-4e89-9e32-263a76387003

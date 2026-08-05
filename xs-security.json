@@ -1,0 +1,32 @@
+{
+  "xsappname": "employee-management",
+  "tenant-mode": "dedicated",
+  "description": "Security configuration for Employee Management CAP Application",
+  "scopes": [
+    {
+      "name": "$XSAPPNAME.EmployeeViewer",
+      "description": "View employee records"
+    },
+    {
+      "name": "$XSAPPNAME.EmployeeManager",
+      "description": "Manage and promote employee records"
+    }
+  ],
+  "role-templates": [
+    {
+      "name": "EmployeeViewerRole",
+      "description": "Role to view employee data",
+      "scope-references": [
+        "$XSAPPNAME.EmployeeViewer"
+      ]
+    },
+    {
+      "name": "EmployeeManagerRole",
+      "description": "Role to manage employee data",
+      "scope-references": [
+        "$XSAPPNAME.EmployeeViewer",
+        "$XSAPPNAME.EmployeeManager"
+      ]
+    }
+  ]
+}
