@@ -5,23 +5,30 @@
     "type": "application",
     "i18n": "i18n/i18n.properties",
     "title": "Employee Management - SAP Fiori",
-    "description": "SAP Fiori Elements Application for Employee Management",
+    "description": "SAP Fiori Application for Employee Management",
+    "applicationVersion": {
+      "version": "1.0.0"
+    },
     "dataSources": {
       "mainService": {
         "uri": "/service/employee/",
         "type": "OData",
         "settings": {
-          "annotations": [
-            "annotation"
-          ],
+          "annotations": [],
           "odataVersion": "4.0"
         }
-      },
-      "annotation": {
-        "type": "ODataAnnotation",
-        "uri": "annotations.cds",
-        "settings": {
-          "localUri": "annotations.cds"
+      }
+    },
+    "crossNavigation": {
+      "inbounds": {
+        "employee-management-inbound": {
+          "semanticObject": "Employee",
+          "action": "manage",
+          "title": "Employee Management - SAP Fiori",
+          "signature": {
+            "parameters": {},
+            "additionalParameters": "allowed"
+          }
         }
       }
     }
