@@ -13,4 +13,4 @@ builder:
       configuration:
         archiveName: employee-ui
         additionalFiles:
-          - xs-app.json
+          - webapp/xs-app.json

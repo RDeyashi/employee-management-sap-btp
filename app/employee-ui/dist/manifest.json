@@ -1,0 +1,117 @@
+{
+  "_version": "1.40.0",
+  "sap.app": {
+    "id": "employee.management.ui",
+    "type": "application",
+    "i18n": "i18n/i18n.properties",
+    "title": "Employee Management - SAP Fiori",
+    "description": "SAP Fiori Elements Application for Employee Management",
+    "dataSources": {
+      "mainService": {
+        "uri": "/service/employee/",
+        "type": "OData",
+        "settings": {
+          "annotations": [
+            "annotation"
+          ],
+          "odataVersion": "4.0"
+        }
+      },
+      "annotation": {
+        "type": "ODataAnnotation",
+        "uri": "annotations.cds",
+        "settings": {
+          "localUri": "annotations.cds"
+        }
+      }
+    }
+  },
+  "sap.cloud": {
+    "service": "employee.management"
+  },
+  "sap.ui": {
+    "technology": "UI5",
+    "deviceTypes": {
+      "desktop": true,
+      "tablet": true,
+      "phone": true
+    }
+  },
+  "sap.ui5": {
+    "rootView": {
+      "viewName": "sap.fe.templates.RootContainer.view.RootContainer",
+      "type": "XML",
+      "async": true
+    },
+    "dependencies": {
+      "minUI5Version": "1.108.0",
+      "libs": {
+        "sap.ui.core": {},
+        "sap.m": {},
+        "sap.fe.templates": {}
+      }
+    },
+    "contentDensities": {
+      "compact": true,
+      "cozy": true
+    },
+    "models": {
+      "": {
+        "dataSource": "mainService",
+        "settings": {
+          "synchronizationMode": "None",
+          "operationMode": "Server",
+          "autoExpandSelect": true,
+          "earlyRequests": true
+        }
+      }
+    },
+    "routing": {
+      "config": {
+        "routerClass": "sap.f.routing.Router"
+      },
+      "routes": [
+        {
+          "pattern": ":?query:",
+          "name": "EmployeesList",
+          "target": "EmployeesList"
+        },
+        {
+          "pattern": "Employees({key}):?query:",
+          "name": "EmployeesDetails",
+          "target": "EmployeesDetails"
+        }
+      ],
+      "targets": {
+        "EmployeesList": {
+          "type": "Component",
+          "id": "EmployeesList",
+          "name": "sap.fe.templates.ListReport",
+          "options": {
+            "settings": {
+              "entitySet": "Employees",
+              "variantManagement": "Page",
+              "navigation": {
+                "Employees": {
+                  "detail": {
+                    "route": "EmployeesDetails"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "EmployeesDetails": {
+          "type": "Component",
+          "id": "EmployeesDetails",
+          "name": "sap.fe.templates.ObjectPage",
+          "options": {
+            "settings": {
+              "entitySet": "Employees"
+            }
+          }
+        }
+      }
+    }
+  }
+}

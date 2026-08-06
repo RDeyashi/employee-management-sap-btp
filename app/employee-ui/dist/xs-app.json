@@ -1,0 +1,20 @@
+{
+  "welcomeFile": "/index.html",
+  "authenticationMethod": "route",
+  "routes": [
+    {
+      "source": "^/service/employee/(.*)$",
+      "target": "/service/employee/$1",
+      "destination": "employee-management-srv-api",
+      "authenticationType": "xsuaa",
+      "csrfProtection": true
+    },
+    {
+      "source": "^/(.*)$",
+      "target": "$1",
+      "enabled": true,
+      "service": "html5-apps-repo-rt",
+      "authenticationType": "xsuaa"
+    }
+  ]
+}
