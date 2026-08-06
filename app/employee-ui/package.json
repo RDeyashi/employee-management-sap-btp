@@ -4,10 +4,10 @@
   "description": "Employee Management UI5 Application",
   "private": true,
   "scripts": {
-    "build": "ui5 build --config=ui5.yaml --clean-dest --dest dist",
-    "postbuild": "node -e \"require('fs').copyFileSync('webapp/xs-app.json', 'dist/xs-app.json')\""
+    "build": "ui5 build --config=ui5.yaml --clean-dest --dest dist"
   },
   "devDependencies": {
-    "@ui5/cli": "^3.0.0"
+    "@ui5/cli": "^3.0.0",
+    "ui5-task-zipper": "^3.0.0"
   }
 }

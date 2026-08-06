@@ -55,7 +55,7 @@ modules:
         - ui5-task-zipper
 
   # --------------------- HTML5 UI DEPLOYER MODULE -----------------------
-  - name: employee-management-ui-deployer
+  - name: employee-management-app-deployer
     type: com.sap.application.content
     path: .
     requires:
