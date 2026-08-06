@@ -54,9 +54,7 @@ modules:
       builder: custom
       commands:
         - npm install
-        - npx @ui5/cli build --config=ui5.yaml --clean-dest --dest dist
-        - cp webapp/xs-app.json dist/xs-app.json
-        - cd dist && zip -r employee-ui.zip *
+        - npm run build
 
   # --------------------- DESTINATION CONTENT MODULE ---------------------
   - name: employee-management-destination-content
