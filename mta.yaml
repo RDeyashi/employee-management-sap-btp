@@ -41,20 +41,34 @@ modules:
     requires:
       - name: employee-management-db
 
+  # --------------------- HTML5 UI BUILD MODULE -----------------------
+  - name: employee-management-ui
+    type: html5
+    path: app/employee-ui
+    build-parameters:
+      builder: custom
+      commands:
+        - npm install
+        - npm run build
+      build-result: dist
+      supported-zip-plugins:
+        - ui5-task-zipper
+
   # --------------------- HTML5 UI DEPLOYER MODULE -----------------------
   - name: employee-management-ui-deployer
     type: com.sap.application.content
-    path: app/employee-ui
+    path: .
     requires:
       - name: employee-management-repo-host
         parameters:
           content-target: true
     build-parameters:
-      build-result: dist
-      builder: custom
-      commands:
-        - npm install
-        - npm run build
+      build-result: resources
+      requires:
+        - name: employee-management-ui
+          artifacts:
+            - employee-ui.zip
+          target-path: resources/
 
   # --------------------- DESTINATION CONTENT MODULE ---------------------
   - name: employee-management-destination-content
