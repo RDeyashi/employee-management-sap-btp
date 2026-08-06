@@ -1,8 +1,7 @@
-_schema-version: "3.1"
+_schema-version: '3.1'
 ID: employee-management
 version: 1.0.0
-description: SAP BTP CAP Employee Management Application
-
+description: "SAP BTP CAPM Employee Management Application"
 parameters:
   enable-parallel-deployments: true
 
@@ -14,63 +13,122 @@ build-parameters:
         - npx cds build --production
 
 modules:
-  ###########################################################################
-  # CAP SERVICE
-  ###########################################################################
+  # --------------------- SERVER MODULE (CAP BACKEND) ---------------------
   - name: employee-management-srv
     type: nodejs
     path: gen/srv
-
     parameters:
       buildpack: nodejs_buildpack
       memory: 512M
       disk-quota: 1024M
-
     build-parameters:
       builder: npm
-
     provides:
       - name: srv-api
         properties:
           srv-url: ${default-url}
-
     requires:
-      - name: employee-management-auth
       - name: employee-management-db
+      - name: employee-management-auth
 
-  ###########################################################################
-  # DATABASE DEPLOYER
-  ###########################################################################
+  # --------------------- DB DEPLOYER MODULE (HANA DB) --------------------
   - name: employee-management-db-deployer
     type: hdb
     path: gen/db
-
     parameters:
       buildpack: nodejs_buildpack
       memory: 256M
-
     requires:
       - name: employee-management-db
 
+  # --------------------- HTML5 UI DEPLOYER MODULE -----------------------
+  - name: employee-management-ui-deployer
+    type: com.sap.application.content
+    path: app/employee-ui
+    requires:
+      - name: employee-management-repo-host
+        parameters:
+          content-target: true
+    build-parameters:
+      build-result: dist
+      builder: custom
+      commands:
+        - npm install
+        - npx @ui5/cli build --config=ui5.yaml --clean-dest --dest dist
+        - cp webapp/xs-app.json dist/xs-app.json
+        - cd dist && zip -r employee-ui.zip *
+
+  # --------------------- DESTINATION CONTENT MODULE ---------------------
+  - name: employee-management-destination-content
+    type: com.sap.application.content
+    path: .
+    requires:
+      - name: employee-management-destination-service
+        parameters:
+          content-target: true
+      - name: employee-management-repo-host
+        parameters:
+          service-key:
+            name: employee-management-repo-host-key
+      - name: employee-management-auth
+        parameters:
+          service-key:
+            name: employee-management-auth-key
+      - name: srv-api
+    parameters:
+      content:
+        subaccount:
+          destinations:
+            - Name: employee-management-srv-api
+              Authentication: NoAuthentication
+              ProxyType: Internet
+              Type: HTTP
+              URL: ~{srv-api/srv-url}
+              HTML5.DynamicDestination: true
+              HTML5.ForwardAuthToken: true
+            - Name: employee-management-html5-repo-host
+              ServiceInstanceName: employee-management-repo-host
+              ServiceKeyName: employee-management-repo-host-key
+              sap.cloud.service: employee.management
+            - Name: employee-management-auth
+              Authentication: OAuth2UserTokenExchange
+              ServiceInstanceName: employee-management-auth
+              ServiceKeyName: employee-management-auth-key
+              sap.cloud.service: employee.management
+          existing_destinations_policy: update
+
 resources:
-  ###########################################################################
-  # HDI CONTAINER
-  ###########################################################################
+  # --------------------- SAP HANA DATABASE SERVICE ----------------------
   - name: employee-management-db
     type: com.sap.xs.hdi-container
     parameters:
       service: hana
       service-plan: hdi-shared
 
-  ###########################################################################
-  # XSUAA
-  ###########################################################################
+  # --------------------- XSUAA SECURITY SERVICE -------------------------
   - name: employee-management-auth
     type: org.cloudfoundry.managed-service
     parameters:
       service: xsuaa
       service-plan: application
-      path: xs-security.json
+      path: ./xs-security.json
       config:
         xsappname: employee-management-${space}
         tenant-mode: dedicated
+
+  # --------------------- HTML5 APP REPOSITORY HOST ---------------------
+  - name: employee-management-repo-host
+    type: org.cloudfoundry.managed-service
+    parameters:
+      service: html5-apps-repo
+      service-plan: app-host
+
+  # --------------------- DESTINATION SERVICE ----------------------------
+  - name: employee-management-destination-service
+    type: org.cloudfoundry.managed-service
+    parameters:
+      service: destination
+      service-plan: lite
+      config:
+        HTML5Runtime_enabled: true
+        version: 1.0.0

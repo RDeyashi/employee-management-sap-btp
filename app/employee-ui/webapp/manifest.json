@@ -25,6 +25,8 @@
         }
       }
     }
+  "sap.cloud": {
+    "service": "employee.management"
   },
   "sap.ui": {
     "technology": "UI5",
